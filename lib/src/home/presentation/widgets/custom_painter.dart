@@ -6,8 +6,9 @@ class CircleProgress extends CustomPainter {
   double value;
   bool isTemp;
   double maxValue;
+  Color color;
 
-  CircleProgress(this.value, this.isTemp, this.maxValue);
+  CircleProgress(this.value, this.isTemp, this.maxValue, this.color);
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
@@ -23,13 +24,13 @@ class CircleProgress extends CustomPainter {
 
     Paint tempArc = Paint()
       ..strokeWidth = 14
-      ..color = Colors.red
+      ..color = color
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
 
     Paint humidityArc = Paint()
       ..strokeWidth = 14
-      ..color = Colors.blue
+      ..color = color
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
 
