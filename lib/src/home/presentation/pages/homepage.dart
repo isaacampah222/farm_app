@@ -1,6 +1,11 @@
+import 'package:farm_app/core/presentation/pages/loading.dart';
+import 'package:farm_app/src/home/presentation/bloc/home_bloc.dart';
 import 'package:farm_app/src/home/presentation/widgets/custom_painter.dart';
+import 'package:farm_app/src/login/presentation/pages/login_page.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../injection_container.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -18,17 +23,34 @@ class HomePageState extends State<HomePage> {
   DatabaseReference irrigate = FirebaseDatabase.instance.ref('irrigate');
   DatabaseReference fillTank = FirebaseDatabase.instance.ref('fillTank');
 
+  final bloc = sl<HomeBloc>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white.withOpacity(0.9),
       appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xff2c666e),
         title: Text(
           'Smart Farm',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Colors.white),
         ),
+        actions: [
+          IconButton(
+              onPressed: () async {
+                return showDialog(
+                    context: context,
+                    builder: (context) => LoadingPage(
+                          errorText: bloc.logout(),
+                          onLoadingDone: () => Navigator.of(context)
+                              .pushAndRemoveUntil(
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginPage()),
+                                  (route) => false),
+                        ));
+              },
+              icon: Icon(Icons.logout))
+        ],
       ),
       body: SafeArea(
           child: Padding(
@@ -392,7 +414,7 @@ class HomePageState extends State<HomePage> {
                               primary: Colors.white,
                               minimumSize: Size.fromHeight(50),
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(25))),
+                                  borderRadius: BorderRadius.zero)),
                           onPressed: () {
                             irrigate.set(true);
                           },
@@ -401,7 +423,7 @@ class HomePageState extends State<HomePage> {
                                 horizontal: 15.0, vertical: 10),
                             child: Text(
                               'Irrigate Farm',
-                              style: TextStyle(color: Colors.black),
+                              style: TextStyle(color: Color(0xff2c666e)),
                             ),
                           ))),
                   Spacer(),
@@ -410,8 +432,9 @@ class HomePageState extends State<HomePage> {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                             minimumSize: Size.fromHeight(50),
+                            primary: Color(0xff2c666e),
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(25))),
+                                borderRadius: BorderRadius.zero)),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 15.0, vertical: 10),
